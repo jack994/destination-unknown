@@ -3,27 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "backpack-react-scripts": "7.0.5"
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start:client": "cd client && npm run start",
+    "build:client": "cd client && npm run build",
+    "test:client": "cd client && npm run test"
   },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "bpk-component-button": "^3.2.25",
-    "bpk-component-code": "^2.0.46",
-    "bpk-component-text": "^3.0.14",
-    "bpk-mixins": "^19.1.15",
-    "bpk-stylesheets": "^6.0.13",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2"
-  }
+  ]
 }
