@@ -1,15 +1,14 @@
-import React, { Component } from "react";
-import BpkLabel from "bpk-component-label";
-import { withRtlSupport } from "bpk-component-icon";
-import FlightIcon from "bpk-component-icon/lg/flight";
+import React, { Component } from 'react';
+import BpkLabel from 'bpk-component-label';
+import { withRtlSupport } from 'bpk-component-icon';
+import FlightIcon from 'bpk-component-icon/lg/flight';
 import BpkAutosuggest, {
-  BpkAutosuggestSuggestion
-} from "bpk-component-autosuggest";
+  BpkAutosuggestSuggestion,
+} from 'bpk-component-autosuggest';
 
 const BpkFlightIcon = withRtlSupport(FlightIcon);
 
 const getSuggestions = async value => {
-  debugger;
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue ? inputValue.length : 0;
   if (!inputValue || inputLength === 0) {
@@ -21,14 +20,14 @@ const getSuggestions = async value => {
     const retValue = await response.json();
 
     if (!retValue.Places) {
-      throw Error("Internal Server Error");
+      throw Error('Internal Server Error');
     }
 
     return retValue.Places.filter(
-      place => place.PlaceName.toLowerCase().indexOf(inputValue) !== -1
+      place => place.PlaceName.toLowerCase().indexOf(inputValue) !== -1,
     );
   } catch (error) {
-    console.log(error);
+    // TODO: some error here
     return [];
   }
 };
@@ -53,40 +52,39 @@ class SearchBar extends Component {
     super();
 
     this.state = {
-      value: "",
-      suggestions: []
+      value: '',
+      suggestions: [],
     };
   }
 
   onChange = (e, { newValue }) => {
     this.setState({
-      value: newValue
+      value: newValue,
     });
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
-    debugger;
     getSuggestions(value).then(result => {
       this.setState({
-        suggestions: result
+        suggestions: result,
       });
     });
   };
 
   onSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: []
+      suggestions: [],
     });
   };
 
   render() {
     const { value, suggestions } = this.state;
     const inputProps = {
-      id: "dest-autosuggest",
-      name: "dest-autosuggest",
-      placeholder: "Enter a destination",
+      id: 'dest-autosuggest',
+      name: 'dest-autosuggest',
+      placeholder: 'Enter a destination',
       value,
-      onChange: this.onChange
+      onChange: this.onChange,
     };
 
     return (

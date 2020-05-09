@@ -1,0 +1,9 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+      "skyscanner"
+  ],
+  "env": {
+    "browser": true
+  }
+}

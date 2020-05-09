@@ -1,6 +1,4 @@
 import React from 'react';
-import { BpkCode } from 'bpk-component-code';
-import BpkButton from 'bpk-component-button';
 import BpkText from 'bpk-component-text';
 
 import SearchBar from '../SearchBar/SearchBar';
@@ -13,11 +11,13 @@ const App = () => (
   <div className={c('App')}>
     <header className={c('App__header')}>
       <div className={c('App__header-inner')}>
-        <BpkText tagName="h1" textStyle="xxl" className={c('App__heading')}>Destination Unknown</BpkText>
+        <BpkText tagName="h1" textStyle="xxl" className={c('App__heading')}>
+          Destination Unknown
+        </BpkText>
       </div>
     </header>
     <main className={c('App__main')}>
-      <SearchBar></SearchBar>
+      <SearchBar />
     </main>
   </div>
 );

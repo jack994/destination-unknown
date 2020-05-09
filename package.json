@@ -8,14 +8,15 @@
     "node-fetch": "^2.6.0"
   },
   "scripts": {
+    "start:server": "node server.js",
     "start:client": "cd client && npm run start",
     "build:client": "cd client && npm run build",
-    "test:client": "cd client && npm run test"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "test:client": "cd client && npm run test",
+    "lint:client": "cd client && npm run lint",
+    "lint:client:fix": "cd client && npm run lint:fix",
+    "lint:client:js": "cd client && npm run lint:js",
+    "lint:client:scss": "cd client && npm run lint:scss",
+    "lint": "npm run lint:client",
+    "lint:fix": "npm run lint:client:fix"
+  }
 }
