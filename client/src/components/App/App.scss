@@ -6,8 +6,6 @@
 }
 
 .App {
-  text-align: center;
-
   &__header {
     padding: $bpk-spacing-lg * 2;
     background-color: $bpk-color-sky-blue;
@@ -21,7 +19,7 @@
     }
   }
 
-  &__header-inner {
+  &__headerInner {
     @include container;
   }
 

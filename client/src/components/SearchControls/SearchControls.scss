@@ -1,0 +1,11 @@
+@import '~bpk-mixins';
+
+.SearchControls{
+  &__checkBox {
+    margin-right: 1rem;
+  }
+  &__passengersPanel{
+    display: flex;
+    align-items: center;
+  }
+}

@@ -6,6 +6,8 @@ import BpkAutosuggest, {
   BpkAutosuggestSuggestion,
 } from 'bpk-component-autosuggest';
 
+import STYLES from './SearchBar.scss';
+
 const BpkFlightIcon = withRtlSupport(FlightIcon);
 
 const getSuggestions = async value => {
@@ -89,8 +91,8 @@ class SearchBar extends Component {
     };
 
     return (
-      <div>
-        <BpkLabel htmlFor="my-autosuggest">New Destination</BpkLabel>
+      <div className={STYLES.SearchBar}>
+        <BpkLabel htmlFor="new-destination">New Destination</BpkLabel>
         <BpkAutosuggest
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
