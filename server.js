@@ -28,7 +28,15 @@ app.get('/api/:query', (request, response) => {
   const url = `${endpoint}${country}/${currency}/${locale}/?query=${request.params.query}&apiKey=${apiKey}`;
 
   fetch(url)
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) {
+        response.status(res.status);
+        throw new Error(res.statusText);
+      }
+      return res.json();
+    })
     .then(json => response.send(json))
-    .catch(err => console.error(err)); // TODO: handle error
+    .catch(err => {
+      response.send(err);
+    });
 });

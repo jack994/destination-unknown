@@ -17,17 +17,18 @@ const getSuggestions = async value => {
 
   try {
     const response = await fetch(`/api/${inputValue}`);
-    const retValue = await response.json();
 
-    if (!retValue.Places) {
-      throw Error('Internal Server Error');
+    if (!response.ok) {
+      throw Error(`${response.status}: ${response.statusText}`);
     }
+
+    const retValue = await response.json();
 
     return retValue.Places.filter(
       place => place.PlaceName.toLowerCase().indexOf(inputValue) !== -1,
     );
   } catch (error) {
-    // TODO: some error here
+    // TODO: what to do with error?
     return [];
   }
 };
