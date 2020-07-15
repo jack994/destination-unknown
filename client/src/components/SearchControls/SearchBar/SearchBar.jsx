@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import BpkLabel from 'bpk-component-label';
+import PropTypes from 'prop-types';
 import { withRtlSupport } from 'bpk-component-icon';
 import FlightIcon from 'bpk-component-icon/lg/flight';
 import BpkAutosuggest, {
@@ -18,7 +19,7 @@ const getSuggestions = async value => {
   }
 
   try {
-    const response = await fetch(`/api/${inputValue}`);
+    const response = await fetch(`/api/autosuggest/${inputValue}`);
 
     if (!response.ok) {
       throw Error(`${response.status}: ${response.statusText}`);
@@ -26,25 +27,25 @@ const getSuggestions = async value => {
 
     const retValue = await response.json();
 
-    return retValue.Places.filter(
+    return retValue.filter(
       place => place.PlaceName.toLowerCase().indexOf(inputValue) !== -1,
     );
   } catch (error) {
+    console.log(error);
     // TODO: what to do with error?
     return [];
   }
 };
 
 const getSuggestionValue = ({ PlaceName, PlaceId }) => {
-  const cityCode = PlaceId.slice(0, PlaceId.length - 4);
-  return `${PlaceName} (${cityCode})`;
+  return `${PlaceName} (${PlaceId})`;
 };
 
 const renderSuggestion = suggestion => (
   <BpkAutosuggestSuggestion
     value={getSuggestionValue(suggestion)}
     subHeading={suggestion.CountryName}
-    tertiaryLabel="Airport"
+    tertiaryLabel="Airport" // TODO: not always airport
     indent={suggestion.indent}
     icon={BpkFlightIcon}
   />
@@ -55,15 +56,12 @@ class SearchBar extends Component {
     super();
 
     this.state = {
-      value: '',
       suggestions: [],
     };
   }
 
   onChange = (e, { newValue }) => {
-    this.setState({
-      value: newValue,
-    });
+    this.props.setPlace(newValue);
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
@@ -81,18 +79,21 @@ class SearchBar extends Component {
   };
 
   render() {
-    const { value, suggestions } = this.state;
+    const { suggestions } = this.state;
+    const { title, place } = this.props;
+    const titleId = title.replace(/\s/g, '');
+
     const inputProps = {
       id: 'dest-autosuggest',
       name: 'dest-autosuggest',
       placeholder: 'Enter a destination',
-      value,
+      value: place || '',
       onChange: this.onChange,
     };
 
     return (
       <div className={STYLES.SearchBar}>
-        <BpkLabel htmlFor="new-destination">New Destination</BpkLabel>
+        <BpkLabel htmlFor={titleId}>{title}</BpkLabel>
         <BpkAutosuggest
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -105,5 +106,11 @@ class SearchBar extends Component {
     );
   }
 }
+
+SearchBar.propTypes = {
+  title: PropTypes.string.isRequired,
+  place: PropTypes.string.isRequired,
+  setPlace: PropTypes.func.isRequired,
+};
 
 export default SearchBar;

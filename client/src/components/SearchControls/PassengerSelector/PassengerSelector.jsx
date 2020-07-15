@@ -6,24 +6,12 @@ import PropTypes from 'prop-types';
 import STYLES from './PassengerSelector.scss';
 
 class PassengerSelector extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      value: 0,
-    };
-  }
-
   componentDidMount() {
-    this.setState({ value: this.props.min });
+    this.props.changeTotal(this.props.min);
   }
-
-  handleChange = value => {
-    this.setState({ value });
-  };
 
   render() {
-    const { title, min, max } = this.props;
+    const { title, min, max, total, changeTotal } = this.props;
     const titleId = title.replace(/\s/g, '');
     return (
       <div className={STYLES.PassengerSelector}>
@@ -32,8 +20,8 @@ class PassengerSelector extends Component {
           id={`${titleId}Nudger`}
           min={min}
           max={max}
-          value={this.state.value}
-          onChange={this.handleChange}
+          value={total}
+          onChange={changeTotal}
           decreaseButtonLabel="Decrease"
           increaseButtonLabel="Increase"
         />
@@ -46,6 +34,8 @@ PassengerSelector.propTypes = {
   title: PropTypes.string.isRequired,
   min: PropTypes.number,
   max: PropTypes.number,
+  total: PropTypes.number.isRequired,
+  changeTotal: PropTypes.func.isRequired,
 };
 
 PassengerSelector.defaultProps = {

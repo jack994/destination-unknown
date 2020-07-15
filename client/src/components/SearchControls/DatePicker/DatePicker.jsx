@@ -6,7 +6,7 @@ import format from 'date-fns/format';
 
 import STYLES from './DatePicker.scss';
 
-const formatDate = date => format(date, 'dd/mm/yyyy');
+const formatDate = date => format(date, 'dd/MM/yyyy');
 const formatDateFull = date => format(date, 'dd MMMM yyyy');
 const formatMonth = date => format(date, 'MMMM yyyy');
 const daysOfWeek = [
@@ -54,48 +54,33 @@ const daysOfWeek = [
   },
 ];
 
-class DatePicker extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      selectedDate: null,
-    };
-  }
-
-  handleDateSelect = date => {
-    this.setState({
-      selectedDate: date,
-    });
-  };
-
-  render() {
-    const { title } = this.props;
-    const titleId = title.replace(/\s/g, '');
-    return (
-      <div className={STYLES.DatePicker}>
-        <BpkLabel htmlFor={titleId}>{title}</BpkLabel>
-        <BpkDatepicker
-          id={`${titleId}Datepicker`}
-          daysOfWeek={daysOfWeek}
-          weekStartsOn={0}
-          changeMonthLabel="Change month"
-          closeButtonText="Close"
-          title={title}
-          getApplicationElement={() => document.getElementById('pagewrap')}
-          formatDate={formatDate}
-          formatMonth={formatMonth}
-          formatDateFull={formatDateFull}
-          onDateSelect={this.handleDateSelect}
-          date={this.state.selectedDate}
-        />
-      </div>
-    );
-  }
-}
+const DatePicker = ({ title, onDateSelected, date }) => {
+  const titleId = title.replace(/\s/g, '');
+  return (
+    <div className={STYLES.DatePicker}>
+      <BpkLabel htmlFor={titleId}>{title}</BpkLabel>
+      <BpkDatepicker
+        id={`${titleId}Datepicker`}
+        daysOfWeek={daysOfWeek}
+        weekStartsOn={0}
+        changeMonthLabel="Change month"
+        closeButtonText="Close"
+        title={title}
+        getApplicationElement={() => document.getElementById('pagewrap')}
+        formatDate={formatDate}
+        formatMonth={formatMonth}
+        formatDateFull={formatDateFull}
+        onDateSelect={onDateSelected}
+        date={date}
+      />
+    </div>
+  );
+};
 
 DatePicker.propTypes = {
   title: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  onDateSelected: PropTypes.func.isRequired,
 };
 
 export default DatePicker;

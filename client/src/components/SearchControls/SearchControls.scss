@@ -4,8 +4,17 @@
   &__checkBox {
     margin-right: 1rem;
   }
-  &__passengersPanel{
+  &__bottomPanel {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+  }
+  &__passengersPanel {
+    display: flex;
+    align-items: center;
+  }
+  &__searchButton {
+    font-size: 1.5rem;
+    padding: 0.5rem 2rem;
   }
 }
