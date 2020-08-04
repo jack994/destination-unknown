@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BpkDatepicker from 'bpk-component-datepicker';
 import BpkLabel from 'bpk-component-label';
-import format from 'date-fns/format';
+
+import {
+  formatDate,
+  formatDateFull,
+  formatMonth,
+} from '../searchControlsUtils';
 
 import STYLES from './DatePicker.scss';
 
-const formatDate = date => format(date, 'dd/MM/yyyy');
-const formatDateFull = date => format(date, 'dd MMMM yyyy');
-const formatMonth = date => format(date, 'MMMM yyyy');
 const daysOfWeek = [
   {
     name: 'Monday',
@@ -56,6 +58,7 @@ const daysOfWeek = [
 
 const DatePicker = ({ title, onDateSelected, date }) => {
   const titleId = title.replace(/\s/g, '');
+
   return (
     <div className={STYLES.DatePicker}>
       <BpkLabel htmlFor={titleId}>{title}</BpkLabel>

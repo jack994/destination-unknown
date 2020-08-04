@@ -38,7 +38,8 @@ const getSuggestions = async value => {
 };
 
 const getSuggestionValue = ({ PlaceName, PlaceId }) => {
-  return `${PlaceName} (${PlaceId})`;
+  const placeIdvalue = PlaceId ? `(${PlaceId})` : '';
+  return `${PlaceName} ${placeIdvalue}`;
 };
 
 const renderSuggestion = suggestion => (
