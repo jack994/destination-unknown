@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import BpkDatepicker from 'bpk-component-datepicker';
 import BpkLabel from 'bpk-component-label';

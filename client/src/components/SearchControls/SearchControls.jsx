@@ -5,7 +5,6 @@ import BpkPanel from 'bpk-component-panel';
 import BpkButton from 'bpk-component-button';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import format from 'date-fns/format';
 
 import {
   changeStartDate,
@@ -37,7 +36,7 @@ import {
 } from './searchControlsUtils';
 
 class SearchControls extends Component {
-  searchFlight() {
+  async searchFlight() {
     const {
       startDate,
       endDate,
@@ -49,14 +48,25 @@ class SearchControls extends Component {
     } = this.props;
 
     if (startDate && endDate && from && adults && adults > 0) {
-      const outboundDate = formatDateSkyscannerApi(startDate);
-      const inboundDate = endDate ? formatDateSkyscannerApi(endDate) : null;
-      const originPlace = getIataFromPlaceString(from);
-      const destinationPlace = getIataFromPlaceString(to);
+      const requestBody = {
+        outboundDate: formatDateSkyscannerApi(startDate),
+        inboundDate: endDate ? formatDateSkyscannerApi(endDate) : undefined,
+        originPlace: getIataFromPlaceString(from),
+        destinationPlace: getIataFromPlaceString(to),
+        adults,
+        children,
+        infants,
+      };
 
-      const request = `/api/search/${originPlace}/${destinationPlace}/${outboundDate}/${inboundDate}/${adults}/${children}/${infants}`;
+      const response = await fetch('/api/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-      console.log(request);
+      console.log(response);
 
       // TODO: finish here and send request from backend to create session
     }
