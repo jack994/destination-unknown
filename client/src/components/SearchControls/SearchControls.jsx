@@ -66,9 +66,8 @@ class SearchControls extends Component {
         body: JSON.stringify(requestBody),
       });
 
+      // TODO: handle response
       console.log(response);
-
-      // TODO: finish here and send request from backend to create session
     }
   }
 

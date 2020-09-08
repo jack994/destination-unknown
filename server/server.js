@@ -23,7 +23,6 @@ app.get("/api/autosuggest/:query", (request, response) => {
   const endpoint = "https://www.skyscanner.net/g/autosuggest-flights/";
   const country = "UK";
   const locale = "en-GB";
-  //const apiKey = process.env.SKYSCANNER_API_KEY;
 
   const url = `${endpoint}${country}/${locale}/${request.params.query}?isDestination=true&enable_general_search_v2=true`;
 
@@ -42,17 +41,37 @@ app.get("/api/autosuggest/:query", (request, response) => {
 });
 
 app.post("/api/search/", (request, response) => {
-  //TODO fetch and return session
+  const reqBody = request.body;
+  reqBody.apiKey = process.env.SKYSCANNER_API_KEY;
+  reqBody.locale = "en-GB";
+  reqBody.country = "UK";
+  reqBody.currency = "EUR";
+  reqBody.locationSchema = "iata";
 
-  const body = request.body;
+  let searchParams = new URLSearchParams();
+  for (key in reqBody) {
+    searchParams.append(key.toLowerCase(), reqBody[key]);
+  }
 
-  console.log(body);
-
-  // fetch('https://httpbin.org/post', {
-  //       method: 'post',
-  //       body:    JSON.stringify(body),
-  //       headers: { 'Content-Type': 'application/json' },
-  //   })
-  //   .then(res => res.json())
-  //   .then(json => console.log(json));
+  fetch("http://partners.api.skyscanner.net/apiservices/pricing/v1.0", {
+    method: "post",
+    body: searchParams,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  }).then((response) => {
+    // TODO: handle errors
+    let session;
+    for (var pair of response.headers.entries()) {
+      if (pair[0].toLowerCase() === "location") {
+        session = pair[1];
+      }
+    }
+    if (session && typeof session === string) {
+      const sessionUrl = `${session}?${reqBody.apiKey}`;
+      // TODO: polling here
+    }
+    // TODO: return some error here
+    return response.json();
+  });
 });

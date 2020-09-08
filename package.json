@@ -2,14 +2,9 @@
   "name": "destination-unknown",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "node-fetch": "^2.6.0"
-  },
   "scripts": {
-    "start:server": "node server.js",
-    "start:server:debug": "nodemon --inspect server.js",
+    "start:server": "cd server && npm run start",
+    "start:server:debug": "cd server && npm run start:debug",
     "start:client": "cd client && npm run start",
     "build:client": "cd client && npm run build",
     "test:client": "cd client && npm run test",
@@ -19,5 +14,8 @@
     "lint:client:scss": "cd client && npm run lint:scss",
     "lint": "npm run lint:client",
     "lint:fix": "npm run lint:client:fix"
+  },
+  "dependencies": {
+    "server": "file:server"
   }
 }
