@@ -5,6 +5,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const fetch = require("node-fetch");
+const { pollSession } = require("./utils");
 
 app.use(express.static(path.join(__dirname, "client", "build")));
 app.use(express.json());
@@ -41,6 +42,8 @@ app.get("/api/autosuggest/:query", (request, response) => {
 });
 
 app.post("/api/search/", (request, response) => {
+  const endpoint =
+    "http://partners.api.skyscanner.net/apiservices/pricing/v1.0";
   const reqBody = request.body;
   reqBody.apiKey = process.env.SKYSCANNER_API_KEY;
   reqBody.locale = "en-GB";
@@ -53,25 +56,32 @@ app.post("/api/search/", (request, response) => {
     searchParams.append(key.toLowerCase(), reqBody[key]);
   }
 
-  fetch("http://partners.api.skyscanner.net/apiservices/pricing/v1.0", {
+  fetch(endpoint, {
     method: "post",
     body: searchParams,
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-  }).then((response) => {
-    // TODO: handle errors
-    let session;
-    for (var pair of response.headers.entries()) {
-      if (pair[0].toLowerCase() === "location") {
-        session = pair[1];
+  })
+    .then(async (resp) => {
+      if (!resp.ok) {
+        response.status(resp.status);
+        throw new Error(resp.statusText);
       }
-    }
-    if (session && typeof session === string) {
-      const sessionUrl = `${session}?${reqBody.apiKey}`;
-      // TODO: polling here
-    }
-    // TODO: return some error here
-    return response.json();
-  });
+      let session;
+      for (var pair of resp.headers.entries()) {
+        if (pair[0].toLowerCase() === "location") {
+          session = pair[1];
+        }
+      }
+      if (session && typeof session === "string") {
+        const sessionUrl = `${session}?apiKey=${reqBody.apiKey}`;
+        const respPolled = await pollSession(sessionUrl);
+        return response.send(respPolled);
+      }
+    })
+    .catch((err) => {
+      response.status(500);
+      return response.send(err);
+    });
 });

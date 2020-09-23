@@ -66,8 +66,15 @@ class SearchControls extends Component {
         body: JSON.stringify(requestBody),
       });
 
-      // TODO: handle response
-      console.log(response);
+      if (!response.ok) {
+        console.log(`${response.status}: ${response.statusText}`);
+        // throw Error(`${response.status}: ${response.statusText}`);
+      }
+
+      const retValue = await response.json();
+
+      // TODO: do something with response
+      console.log(retValue);
     }
   }
 
