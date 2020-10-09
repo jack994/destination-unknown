@@ -38,8 +38,8 @@ const getSuggestions = async value => {
 };
 
 const getSuggestionValue = ({ PlaceName, PlaceId }) => {
-  const placeIdvalue = PlaceId ? `(${PlaceId})` : '';
-  return `${PlaceName} ${placeIdvalue}`;
+  const placeIdValue = PlaceId ? `(${PlaceId})` : '';
+  return `${PlaceName} ${placeIdValue}`;
 };
 
 const renderSuggestion = suggestion => (
@@ -58,11 +58,18 @@ class SearchBar extends Component {
 
     this.state = {
       suggestions: [],
+      currentSuggestion: null,
     };
   }
 
   onChange = (e, { newValue }) => {
-    this.props.setPlace(newValue);
+    this.setState({
+      currentSuggestion: newValue,
+    });
+  };
+
+  onSuggestionSelected = (event, { suggestion }) => {
+    this.props.setPlace(suggestion);
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
@@ -81,14 +88,14 @@ class SearchBar extends Component {
 
   render() {
     const { suggestions } = this.state;
-    const { title, place } = this.props;
+    const { title } = this.props;
     const titleId = title.replace(/\s/g, '');
 
     const inputProps = {
       id: 'dest-autosuggest',
       name: 'dest-autosuggest',
       placeholder: 'Enter a destination',
-      value: place || '',
+      value: this.state.currentSuggestion || '',
       onChange: this.onChange,
     };
 
@@ -99,6 +106,7 @@ class SearchBar extends Component {
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
           onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+          onSuggestionSelected={this.onSuggestionSelected}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
           inputProps={inputProps}
@@ -110,7 +118,6 @@ class SearchBar extends Component {
 
 SearchBar.propTypes = {
   title: PropTypes.string.isRequired,
-  place: PropTypes.string.isRequired,
   setPlace: PropTypes.func.isRequired,
 };
 

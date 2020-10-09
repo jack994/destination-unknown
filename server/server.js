@@ -64,6 +64,7 @@ app.post("/api/search/", (request, response) => {
     },
   })
     .then(async (resp) => {
+      // TODO: this is returning false if we try to search for LOND (city) (confused)
       if (!resp.ok) {
         response.status(resp.status);
         throw new Error(resp.statusText);

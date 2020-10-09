@@ -1,3 +1,4 @@
+// Basic selectors
 export const getFromState = store => store.origin;
 export const getToState = store => store.destination;
 export const getStartDateState = store => store.startDate;
