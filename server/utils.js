@@ -31,6 +31,36 @@ async function pollSession(sessionUrl) {
   }
 }
 
+async function requestPerMarket(requestBody){
+  const searchParams = new URLSearchParams(requestBody);
+  const endpoint =
+    "http://partners.api.skyscanner.net/apiservices/pricing/v1.0";
+
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: searchParams,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+  if(!response.ok){
+    throw new Error('Could not create session');
+  }
+
+  let session;
+  let resp = {};
+  for (var pair of response.headers.entries()) {
+    if (pair[0].toLowerCase() === "location") {
+      session = pair[1];
+    }
+  }
+  if (session) {
+    const sessionUrl = `${session}?apiKey=${requestBody.apiKey}`;
+    resp = await pollSession(sessionUrl);
+  }
+  return resp;
+}
+
 module.exports = {
-  pollSession,
+  requestPerMarket,
 };

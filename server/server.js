@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const fetch = require("node-fetch");
-const { pollSession } = require("./utils");
+const { requestPerMarket } = require("./utils");
 
 app.use(express.static(path.join(__dirname, "client", "build")));
 app.use(express.json());
@@ -41,48 +41,27 @@ app.get("/api/autosuggest/:query", (request, response) => {
     });
 });
 
-app.post("/api/search/", (request, response) => {
-  const endpoint =
-    "http://partners.api.skyscanner.net/apiservices/pricing/v1.0";
-  const reqBody = request.body;
-  reqBody.apiKey = process.env.SKYSCANNER_API_KEY;
-  reqBody.locale = "en-GB";
-  reqBody.country = "UK";
-  reqBody.currency = "EUR";
-  reqBody.locationSchema = "iata";
-
-  let searchParams = new URLSearchParams();
-  for (key in reqBody) {
-    searchParams.append(key.toLowerCase(), reqBody[key]);
-  }
-
-  fetch(endpoint, {
-    method: "post",
-    body: searchParams,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  })
-    .then(async (resp) => {
-      // TODO: this is returning false if we try to search for LOND (city) (confused)
-      if (!resp.ok) {
-        response.status(resp.status);
-        throw new Error(resp.statusText);
-      }
-      let session;
-      for (var pair of resp.headers.entries()) {
-        if (pair[0].toLowerCase() === "location") {
-          session = pair[1];
-        }
-      }
-      if (session && typeof session === "string") {
-        const sessionUrl = `${session}?apiKey=${reqBody.apiKey}`;
-        const respPolled = await pollSession(sessionUrl);
-        return response.send(respPolled);
-      }
-    })
-    .catch((err) => {
-      response.status(500);
-      return response.send(err);
+app.post("/api/search/", async (request, response) => {
+  try {
+    const promises = [];
+    request.body.borders.forEach(market => {
+      const requestBody = {
+        ...request.body.targeting,
+        apiKey: process.env.SKYSCANNER_API_KEY,
+        locale: "en-GB",
+        country: market,
+        currency: "EUR",
+        locationSchema: "iata",
+      };
+      promises.push(requestPerMarket(requestBody));
     });
+    const dataForAllMarkets = await Promise.all(promises);
+    response.send(dataForAllMarkets);
+  } catch(err){
+    response.status(500);
+    // TODO: need to structure error
+    return response.send({
+      message: err.message,
+    });
+  }
 });

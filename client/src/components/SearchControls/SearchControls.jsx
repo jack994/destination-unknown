@@ -49,8 +49,10 @@ const getNeighbouringCountries = async countryCode => {
     );
   }
   const jsonResponse = await response.json();
-  // TODO: this also might return 'UK' which is not iso
-  return jsonResponse.borders.map(x => convertIso3Code(x).iso2);
+  return jsonResponse.borders.map(x => {
+    const iso2Code = convertIso3Code(x).iso2;
+    return iso2Code === 'GB' ? 'UK' : iso2Code;
+  });
 };
 
 class SearchControls extends Component {
@@ -70,21 +72,28 @@ class SearchControls extends Component {
     const destinationIATA = destination && destination.PlaceId;
     const destinationCountry = destination && destination.CountryId;
 
-    // TODO: these contain the markets of neighbouring countries
     const oriBorders = await getNeighbouringCountries(originCountry);
     const destBorders = await getNeighbouringCountries(destinationCountry);
+    const allBorders = oriBorders.concat(destBorders);
+    allBorders.push(originCountry);
+    allBorders.push(destinationCountry);
+    const uniqueBorders = [...new Set(allBorders)];
 
     if (startDate && origin && adults && adults > 0) {
       const requestBody = {
-        outboundDate: formatDateSkyscannerApi(startDate),
-        inboundDate: endDate ? formatDateSkyscannerApi(endDate) : undefined,
-        originPlace: originIATA,
-        destinationPlace: destinationIATA,
-        adults,
-        children,
-        infants,
+        targeting: {
+          outboundDate: formatDateSkyscannerApi(startDate),
+          inboundDate: endDate ? formatDateSkyscannerApi(endDate) : undefined,
+          originPlace: originIATA,
+          destinationPlace: destinationIATA,
+          adults,
+          children,
+          infants,
+        },
+        borders: uniqueBorders,
       };
 
+      // TODO: if destination is 4 letter city code request fails
       const response = await fetch('/api/search', {
         method: 'POST',
         headers: {
@@ -95,7 +104,6 @@ class SearchControls extends Component {
 
       if (!response.ok) {
         console.log(`${response.status}: ${response.statusText}`);
-        // throw Error(`${response.status}: ${response.statusText}`);
       }
 
       const retValue = await response.json();

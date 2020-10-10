@@ -14,8 +14,5 @@
     "lint:client:scss": "cd client && npm run lint:scss",
     "lint": "npm run lint:client",
     "lint:fix": "npm run lint:client:fix"
-  },
-  "dependencies": {
-    "server": "file:server"
   }
 }
