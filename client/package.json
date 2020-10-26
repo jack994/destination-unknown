@@ -36,6 +36,7 @@
     "bpk-mixins": "^19.1.15",
     "bpk-stylesheets": "^6.0.13",
     "bpk-tokens": "^32.0.4",
+    "convert-country-codes": "^1.0.0",
     "date-fns": "^2.15.0",
     "prop-types": "^15.7.2",
     "react": "^16.4.2",

@@ -20,33 +20,35 @@ const getSuggestions = async value => {
 
   try {
     const response = await fetch(`/api/autosuggest/${inputValue}`);
-
-    if (!response.ok) {
-      throw Error(`${response.status}: ${response.statusText}`);
-    }
-
     const retValue = await response.json();
 
+    if (!response.ok) {
+      throw Error(`${response.status}: ${retValue.message}`);
+    }
+
     return retValue.filter(
-      place => place.PlaceName.toLowerCase().indexOf(inputValue) !== -1,
+      place =>
+        place.PlaceName &&
+        place.PlaceName.toLowerCase().indexOf(inputValue) !== -1 &&
+        place.PlaceId &&
+        place.PlaceId.length === 3, // filter-out non-airports
     );
   } catch (error) {
     console.log(error);
-    // TODO: what to do with error?
     return [];
   }
 };
 
 const getSuggestionValue = ({ PlaceName, PlaceId }) => {
-  const placeIdvalue = PlaceId ? `(${PlaceId})` : '';
-  return `${PlaceName} ${placeIdvalue}`;
+  const placeIdValue = PlaceId ? `(${PlaceId})` : '';
+  return `${PlaceName} ${placeIdValue}`;
 };
 
 const renderSuggestion = suggestion => (
   <BpkAutosuggestSuggestion
     value={getSuggestionValue(suggestion)}
     subHeading={suggestion.CountryName}
-    tertiaryLabel="Airport" // TODO: not always airport
+    tertiaryLabel="Airport" // hardcoded to airport
     indent={suggestion.indent}
     icon={BpkFlightIcon}
   />
@@ -58,11 +60,18 @@ class SearchBar extends Component {
 
     this.state = {
       suggestions: [],
+      currentSuggestion: null,
     };
   }
 
   onChange = (e, { newValue }) => {
-    this.props.setPlace(newValue);
+    this.setState({
+      currentSuggestion: newValue,
+    });
+  };
+
+  onSuggestionSelected = (event, { suggestion }) => {
+    this.props.setPlace(suggestion);
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
@@ -81,14 +90,14 @@ class SearchBar extends Component {
 
   render() {
     const { suggestions } = this.state;
-    const { title, place } = this.props;
+    const { title } = this.props;
     const titleId = title.replace(/\s/g, '');
 
     const inputProps = {
       id: 'dest-autosuggest',
       name: 'dest-autosuggest',
       placeholder: 'Enter a destination',
-      value: place || '',
+      value: this.state.currentSuggestion || '',
       onChange: this.onChange,
     };
 
@@ -99,6 +108,7 @@ class SearchBar extends Component {
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
           onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+          onSuggestionSelected={this.onSuggestionSelected}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
           inputProps={inputProps}
@@ -110,7 +120,6 @@ class SearchBar extends Component {
 
 SearchBar.propTypes = {
   title: PropTypes.string.isRequired,
-  place: PropTypes.string.isRequired,
   setPlace: PropTypes.func.isRequired,
 };
 
