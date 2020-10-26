@@ -20,19 +20,21 @@ const getSuggestions = async value => {
 
   try {
     const response = await fetch(`/api/autosuggest/${inputValue}`);
-
-    if (!response.ok) {
-      throw Error(`${response.status}: ${response.statusText}`);
-    }
-
     const retValue = await response.json();
 
+    if (!response.ok) {
+      throw Error(`${response.status}: ${retValue.message}`);
+    }
+
     return retValue.filter(
-      place => place.PlaceName.toLowerCase().indexOf(inputValue) !== -1,
+      place =>
+        place.PlaceName &&
+        place.PlaceName.toLowerCase().indexOf(inputValue) !== -1 &&
+        place.PlaceId &&
+        place.PlaceId.length === 3, // filter-out non-airports
     );
   } catch (error) {
     console.log(error);
-    // TODO: what to do with error?
     return [];
   }
 };
@@ -46,7 +48,7 @@ const renderSuggestion = suggestion => (
   <BpkAutosuggestSuggestion
     value={getSuggestionValue(suggestion)}
     subHeading={suggestion.CountryName}
-    tertiaryLabel="Airport" // TODO: not always airport
+    tertiaryLabel="Airport" // hardcoded to airport
     indent={suggestion.indent}
     icon={BpkFlightIcon}
   />

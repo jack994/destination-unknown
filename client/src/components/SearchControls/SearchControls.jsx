@@ -38,7 +38,7 @@ const getNeighbouringCountries = async countryCode => {
     console.log('countryCode is NULL');
     return [];
   }
-  // TODO: need to take a look at why in skyscanner this happens (wtf):
+  // TODO: need to take a look at why in skyscanner this happens
   const countryISOCode = countryCode === 'UK' ? 'GB' : countryCode;
   const response = await fetch(
     `https://restcountries.eu/rest/v2/alpha/${countryISOCode}?fields=borders`,
@@ -47,6 +47,7 @@ const getNeighbouringCountries = async countryCode => {
     console.log(
       `Error trying to reach restcountries-api for countrycode: ${countryCode.toUpperCase()}`,
     );
+    return [];
   }
   const jsonResponse = await response.json();
   return jsonResponse.borders.map(x => {
@@ -93,23 +94,26 @@ class SearchControls extends Component {
         borders: uniqueBorders,
       };
 
-      // TODO: if destination is 4 letter city code request fails
-      const response = await fetch('/api/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
+      try {
+        const response = await fetch('/api/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
 
-      if (!response.ok) {
-        console.log(`${response.status}: ${response.statusText}`);
+        const retValue = await response.json();
+
+        if (!response.ok) {
+          throw new Error(`${response.status}: ${retValue.message}`);
+        }
+
+        // TODO: do something with response
+        console.log(retValue);
+      } catch (err) {
+        console.log(err);
       }
-
-      const retValue = await response.json();
-
-      // TODO: do something with response
-      console.log(retValue);
     }
   }
 

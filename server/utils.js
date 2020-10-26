@@ -31,8 +31,12 @@ async function pollSession(sessionUrl) {
   }
 }
 
-async function requestPerMarket(requestBody){
-  const searchParams = new URLSearchParams(requestBody);
+async function requestPerMarket(market, requestBody){
+  const bodyWithMarket = {
+    ...requestBody,
+    country: market,
+  }
+  const searchParams = new URLSearchParams(bodyWithMarket);
   const endpoint =
     "http://partners.api.skyscanner.net/apiservices/pricing/v1.0";
 

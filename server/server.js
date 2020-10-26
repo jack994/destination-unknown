@@ -20,25 +20,26 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
-app.get("/api/autosuggest/:query", (request, response) => {
+app.get("/api/autosuggest/:query", async (request, response) => {
   const endpoint = "https://www.skyscanner.net/g/autosuggest-flights/";
   const country = "UK";
   const locale = "en-GB";
 
-  const url = `${endpoint}${country}/${locale}/${request.params.query}?isDestination=true&enable_general_search_v2=true`;
+  const url = `${endpoint}${country}/${locale}/${request.params.query}?enable_general_search_v2=true`;
 
-  fetch(url)
-    .then((res) => {
-      if (!res.ok) {
-        response.status(res.status);
-        throw new Error(res.statusText);
-      }
-      return res.json();
-    })
-    .then((json) => response.send(json))
-    .catch((err) => {
-      response.send(err);
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      throw new Error(resp.statusText || 'Error fetching autocomplete');
+    }
+    const jsonResp = await resp.json();
+    return response.json(jsonResp);
+  } catch (err){
+    response.status(err.status || 500);
+    return response.json({
+      message: err.message,
     });
+  }
 });
 
 app.post("/api/search/", async (request, response) => {
@@ -49,18 +50,16 @@ app.post("/api/search/", async (request, response) => {
         ...request.body.targeting,
         apiKey: process.env.SKYSCANNER_API_KEY,
         locale: "en-GB",
-        country: market,
         currency: "EUR",
         locationSchema: "iata",
       };
-      promises.push(requestPerMarket(requestBody));
+      promises.push(requestPerMarket(market, requestBody));
     });
     const dataForAllMarkets = await Promise.all(promises);
     response.send(dataForAllMarkets);
   } catch(err){
-    response.status(500);
-    // TODO: need to structure error
-    return response.send({
+    response.status(err.status || 500);
+    return response.json({
       message: err.message,
     });
   }
