@@ -8,6 +8,17 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 0.5rem;
+  }
+  &__searchPanel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__datePanel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   &__passengersPanel {
     display: flex;

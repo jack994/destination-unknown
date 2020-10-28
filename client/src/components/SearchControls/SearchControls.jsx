@@ -57,6 +57,25 @@ const getNeighbouringCountries = async countryCode => {
 };
 
 class SearchControls extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      return: false,
+    };
+  }
+
+  toggleReturn(e) {
+    const isChecked = e.target.checked;
+    const { changeTripType, changeEndDate } = this.props;
+    this.setState({ return: isChecked });
+    if (!isChecked) {
+      // set the return date in the store as null
+      changeEndDate(null);
+      changeTripType();
+    }
+  }
+
   async searchFlight() {
     const {
       startDate,
@@ -131,29 +150,34 @@ class SearchControls extends Component {
       changePassengers,
       changeChildren,
       changeInfants,
-      changeTripType,
     } = this.props;
 
     return (
       <BpkPanel className={STYLES.SearchControls__mainPanel}>
-        <SearchBar title="From" setPlace={changeFrom} />
-        <SearchBar title="To" setPlace={changeTo} />
-        <DatePicker
-          title="Depart"
-          date={startDate}
-          onDateSelected={changeStartDate}
-        />
-        <DatePicker
-          title="Return"
-          date={endDate}
-          onDateSelected={changeEndDate}
-        />
+        <div className={STYLES.SearchControls__searchPanel}>
+          <SearchBar title="Origin" setPlace={changeFrom} />
+          <SearchBar title="Destination" setPlace={changeTo} />
+        </div>
+        <div className={STYLES.SearchControls__datePanel}>
+          <DatePicker
+            title="Departure Date"
+            date={startDate}
+            onDateSelected={changeStartDate}
+          />
+          {this.state.return && (
+            <DatePicker
+              title="Return Date"
+              date={endDate}
+              onDateSelected={changeEndDate}
+            />
+          )}
+        </div>
         <BpkPanel className={STYLES.SearchControls__bottomPanel}>
           <div className={STYLES.SearchControls__passengersPanel}>
             <BpkCheckbox
               className={STYLES.SearchControls__checkBox}
               name="return-flight"
-              onChange={changeTripType}
+              onChange={e => this.toggleReturn(e)}
               label="Return Flight"
             />
             <PassengerSelector
