@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import BpkCheckbox from 'bpk-component-checkbox';
 import BpkPanel from 'bpk-component-panel';
-import BpkButton from 'bpk-component-button';
+import BpkButtonPrimary from 'bpk-component-button';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { convertIso3Code } from 'convert-country-codes';
@@ -197,13 +197,13 @@ class SearchControls extends Component {
               changeTotal={changeInfants}
             />
           </div>
-          <BpkButton
+          <BpkButtonPrimary
             featured
             className={STYLES.SearchControls__searchButton}
             onClick={() => this.searchFlight()}
           >
             Search
-          </BpkButton>
+          </BpkButtonPrimary>
         </BpkPanel>
       </BpkPanel>
     );
@@ -233,13 +233,30 @@ export default connect(mapStateToProps, {
   changeTripType,
 })(SearchControls);
 
-// TODO: date warning in console, it should be date not string in prop validation
+const locationShape = PropTypes.shape({
+  PlaceId: PropTypes.string,
+  PlaceName: PropTypes.string,
+  LocalizedPlaceName: PropTypes.string,
+  CountryId: PropTypes.string,
+  CityId: PropTypes.string,
+  IataCode: PropTypes.string,
+  CountryName: PropTypes.string,
+  PlaceNameEn: PropTypes.string,
+  RegionId: PropTypes.string,
+  CityName: PropTypes.string,
+  CityNameEn: PropTypes.string,
+  GeoId: PropTypes.string,
+  GeoContainerId: PropTypes.string,
+  Location: PropTypes.string,
+  ResultingPhrase: PropTypes.string,
+  Highlighting: PropTypes.array,
+});
 
 SearchControls.propTypes = {
-  startDate: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
-  origin: PropTypes.string.isRequired, // TODO: this is location type
-  destination: PropTypes.string.isRequired, // TODO: this is location type
+  startDate: PropTypes.instanceOf(Date),
+  endDate: PropTypes.instanceOf(Date),
+  origin: locationShape,
+  destination: locationShape,
   adults: PropTypes.number.isRequired,
   children: PropTypes.number.isRequired,
   infants: PropTypes.number.isRequired,
@@ -251,4 +268,11 @@ SearchControls.propTypes = {
   changeChildren: PropTypes.func.isRequired,
   changeInfants: PropTypes.func.isRequired,
   changeTripType: PropTypes.func.isRequired,
+};
+
+SearchControls.defaultProps = {
+  startDate: null,
+  endDate: null,
+  origin: null,
+  destination: null,
 };

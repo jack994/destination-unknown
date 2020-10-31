@@ -82,8 +82,12 @@ const DatePicker = ({ title, onDateSelected, date }) => {
 
 DatePicker.propTypes = {
   title: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
+  date: PropTypes.instanceOf(Date),
   onDateSelected: PropTypes.func.isRequired,
+};
+
+DatePicker.defaultProps = {
+  date: null,
 };
 
 export default DatePicker;
