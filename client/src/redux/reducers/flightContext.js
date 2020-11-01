@@ -7,7 +7,7 @@ import {
   CHANGE_CHILDREN,
   CHANGE_INFANTS,
   CHANGE_TRIP_TYPE,
-} from '../actionTypes';
+} from '../actions/actionTypes';
 
 const initialState = {
   origin: null,

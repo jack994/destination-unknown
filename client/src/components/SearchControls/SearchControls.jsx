@@ -16,12 +16,13 @@ import {
   changeChildren,
   changeInfants,
   changeTripType,
-} from '../../redux/actions';
+} from '../../redux/actions/flightContextActions';
 import {
   getStartDateState,
   getEndDateState,
   getFromState,
   getToState,
+  getIsReturnState,
   getNumberOfPeopleState,
   getNumberOfChildrenState,
   getNumberOfInfantsState,
@@ -57,23 +58,14 @@ const getNeighbouringCountries = async countryCode => {
 };
 
 class SearchControls extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      return: false,
-    };
-  }
-
   toggleReturn(e) {
     const isChecked = e.target.checked;
     const { changeTripType, changeEndDate } = this.props;
-    this.setState({ return: isChecked });
     if (!isChecked) {
       // set the return date in the store as null
       changeEndDate(null);
-      changeTripType();
     }
+    changeTripType();
   }
 
   async searchFlight() {
@@ -143,6 +135,7 @@ class SearchControls extends Component {
       adults,
       infants,
       children,
+      isReturn,
       changeStartDate,
       changeEndDate,
       changeFrom,
@@ -164,7 +157,7 @@ class SearchControls extends Component {
             date={startDate}
             onDateSelected={changeStartDate}
           />
-          {this.state.return && (
+          {isReturn && (
             <DatePicker
               title="Return Date"
               date={endDate}
@@ -177,6 +170,7 @@ class SearchControls extends Component {
             <BpkCheckbox
               className={STYLES.SearchControls__checkBox}
               name="return-flight"
+              checked={isReturn}
               onChange={e => this.toggleReturn(e)}
               label="Return Flight"
             />
@@ -219,6 +213,7 @@ const mapStateToProps = state => {
     adults: getNumberOfPeopleState(state),
     children: getNumberOfChildrenState(state),
     infants: getNumberOfInfantsState(state),
+    isReturn: getIsReturnState(state),
   };
 };
 
@@ -260,6 +255,7 @@ SearchControls.propTypes = {
   adults: PropTypes.number.isRequired,
   children: PropTypes.number.isRequired,
   infants: PropTypes.number.isRequired,
+  isReturn: PropTypes.bool.isRequired,
   changeStartDate: PropTypes.func.isRequired,
   changeEndDate: PropTypes.func.isRequired,
   changeFrom: PropTypes.func.isRequired,
