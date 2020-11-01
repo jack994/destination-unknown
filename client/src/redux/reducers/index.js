@@ -1,3 +1,7 @@
-import flightContext from './flightContext';
+import { combineReducers } from 'redux';
 
-export default flightContext;
+import flightContextReducer from './flightContext';
+
+export default combineReducers({
+  flightContext: flightContextReducer,
+});
