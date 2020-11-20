@@ -16,6 +16,7 @@ import {
   changeChildren,
   changeInfants,
   changeTripType,
+  populateSkyscanner,
 } from '../../redux/actions/flightContextActions';
 import {
   getStartDateState,
@@ -77,6 +78,7 @@ class SearchControls extends Component {
       adults,
       infants,
       children,
+      populateSkyscanner,
     } = this.props;
 
     const originIATA = origin && origin.PlaceId;
@@ -122,6 +124,7 @@ class SearchControls extends Component {
 
         // TODO: do something with response
         console.log(retValue);
+        populateSkyscanner(retValue);
       } catch (err) {
         console.log(err);
       }
@@ -226,6 +229,7 @@ export default connect(mapStateToProps, {
   changeChildren,
   changeInfants,
   changeTripType,
+  populateSkyscanner,
 })(SearchControls);
 
 const locationShape = PropTypes.shape({
@@ -264,6 +268,7 @@ SearchControls.propTypes = {
   changeChildren: PropTypes.func.isRequired,
   changeInfants: PropTypes.func.isRequired,
   changeTripType: PropTypes.func.isRequired,
+  populateSkyscanner: PropTypes.func.isRequired,
 };
 
 SearchControls.defaultProps = {

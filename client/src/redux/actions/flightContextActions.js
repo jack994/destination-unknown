@@ -7,6 +7,7 @@ import {
   CHANGE_CHILDREN,
   CHANGE_INFANTS,
   CHANGE_TRIP_TYPE,
+  POPULATE_SKYSCANNER,
 } from './actionTypes';
 
 export const changeFrom = place => ({
@@ -46,4 +47,9 @@ export const changeInfants = infants => ({
 
 export const changeTripType = () => ({
   type: CHANGE_TRIP_TYPE,
+});
+
+export const populateSkyscanner = apiResponse => ({
+  type: POPULATE_SKYSCANNER,
+  payload: { apiResponse },
 });

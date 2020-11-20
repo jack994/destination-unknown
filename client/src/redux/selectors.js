@@ -1,4 +1,4 @@
-// Basic selectors
+// FlightContext selectors
 export const getFromState = store => store.flightContext.origin;
 export const getToState = store => store.flightContext.destination;
 export const getStartDateState = store => store.flightContext.startDate;
