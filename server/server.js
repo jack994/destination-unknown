@@ -51,6 +51,7 @@ app.post("/api/search/", async (request, response) => {
         apiKey: process.env.SKYSCANNER_API_KEY,
         locale: "en-GB",
         currency: "EUR",
+        groupPricing: true,
         locationSchema: "iata",
       };
       promises.push(requestPerMarket(market, requestBody));

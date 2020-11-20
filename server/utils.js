@@ -48,7 +48,7 @@ async function requestPerMarket(market, requestBody){
     },
   });
   if(!response.ok){
-    throw new Error('Could not create session');
+    return {market, response: {}};
   }
 
   let session;
@@ -62,7 +62,7 @@ async function requestPerMarket(market, requestBody){
     const sessionUrl = `${session}?apiKey=${requestBody.apiKey}`;
     resp = await pollSession(sessionUrl);
   }
-  return resp;
+  return {market, response: resp};
 }
 
 module.exports = {
