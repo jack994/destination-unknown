@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { convertIso3Code } from 'convert-country-codes';
 
+import { populateSkyscanner } from '../../redux/actions/skyscannerActions';
 import {
   changeStartDate,
   changeEndDate,
@@ -16,7 +17,6 @@ import {
   changeChildren,
   changeInfants,
   changeTripType,
-  populateSkyscanner,
 } from '../../redux/actions/flightContextActions';
 import {
   getStartDateState,
@@ -122,8 +122,7 @@ class SearchControls extends Component {
           throw new Error(`${response.status}: ${retValue.message}`);
         }
 
-        // TODO: do something with response
-        console.log(retValue);
+        // this inserts response in the store
         populateSkyscanner(retValue);
       } catch (err) {
         console.log(err);

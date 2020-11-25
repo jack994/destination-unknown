@@ -10,3 +10,9 @@ export const getNumberOfChildrenState = store =>
 export const getNumberOfInfantsState = store =>
   store.flightContext.numberOfInfants;
 export const getIsReturnState = store => store.flightContext.isReturn;
+
+// Skyscanner selectors
+export const getMarkets = store =>
+  store.skyscanner.tickets.map(ticket => ticket.market);
+export const getTicketFromMarket = (store, market) =>
+  store.skyscanner.tickets.find(ticket => ticket.market === market);

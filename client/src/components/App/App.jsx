@@ -3,6 +3,7 @@ import BpkText from 'bpk-component-text';
 import { Provider } from 'react-redux';
 
 import SearchControls from '../SearchControls/SearchControls';
+import TicketsSection from '../TicketsSection/TicketsSection';
 import store from '../../redux/store';
 
 import STYLES from './App.scss';
@@ -18,6 +19,7 @@ const App = () => (
     </header>
     <main className={STYLES.App__main}>
       <SearchControls />
+      <TicketsSection />
     </main>
   </Provider>
 );
