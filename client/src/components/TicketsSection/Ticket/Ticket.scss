@@ -1,0 +1,39 @@
+@import '~bpk-mixins';
+
+.Ticket{
+  margin: $bpk-spacing-sm 0 $bpk-spacing-sm 0;
+
+  &__stub{
+    text-align: center;
+  }
+
+  &__marketAgentContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__legContainer{
+    margin: $bpk-spacing-sm 0 $bpk-spacing-sm 0;
+  }
+
+  &__departureArrivalContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__durationStopsContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__bookButton{
+    font-size: 1.25rem;
+  }
+
+  &__price{
+    font-size: 1.25rem;
+  }
+}

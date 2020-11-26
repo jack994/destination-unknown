@@ -60,28 +60,22 @@ const getLegDetailsFromId = (legId, legs) => {
   };
 };
 
-const buildTicketFromElement = element => {
-  const cheapestItinerary = getCheapestItinerary(element.response.Itineraries);
-  return {
-    market: element.market,
-    agents: getAgentNamesFromItinerary(
-      cheapestItinerary,
-      element.response.Agents,
-    ),
-    price: cheapestItinerary.CheapestPricingOption.Price,
-    url: cheapestItinerary.CheapestPricingOption.DeeplinkUrl,
-    outbound: getLegDetailsFromId(
-      cheapestItinerary.OutboundLegId,
-      element.response.Legs,
-    ),
-    inbound: cheapestItinerary.inboundLegId
-      ? getLegDetailsFromId(
-          cheapestItinerary.inboundLegId,
-          element.response.Legs,
-        )
-      : null,
-  };
-};
+const buildTicketFromElement = (element, cheapestItinerary) => ({
+  market: element.market,
+  agents: getAgentNamesFromItinerary(
+    cheapestItinerary,
+    element.response.Agents,
+  ),
+  price: cheapestItinerary.CheapestPricingOption.Price,
+  url: cheapestItinerary.CheapestPricingOption.DeeplinkUrl,
+  outbound: getLegDetailsFromId(
+    cheapestItinerary.OutboundLegId,
+    element.response.Legs,
+  ),
+  inbound: cheapestItinerary.InboundLegId
+    ? getLegDetailsFromId(cheapestItinerary.InboundLegId, element.response.Legs)
+    : null,
+});
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -95,9 +89,12 @@ export default (state = initialState, action) => {
           element.response &&
           element.response.Itineraries
         ) {
-          const ticket = buildTicketFromElement(element);
-          // TODO: try not to push but use functional (e.g. reduce or something else)
-          tickets.push(ticket);
+          const itinerary = getCheapestItinerary(element.response.Itineraries);
+          if (itinerary) {
+            // TODO: try not to push but use functional (e.g. reduce or something else)
+            const ticket = buildTicketFromElement(element, itinerary);
+            tickets.push(ticket);
+          }
         }
       });
 

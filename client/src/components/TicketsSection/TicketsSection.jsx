@@ -9,12 +9,7 @@ import Ticket from './Ticket/Ticket';
 // import STYLES from './TicketsSection.scss';
 
 const createTicketList = markets =>
-  markets.map(item => (
-    <>
-      <Ticket market={item} />
-      <hr />
-    </>
-  ));
+  markets.map(item => <Ticket market={item} />);
 
 const TicketsSection = props => {
   const { markets } = props;

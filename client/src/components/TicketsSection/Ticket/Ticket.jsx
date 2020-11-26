@@ -1,37 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import BpkTicket from 'bpk-component-ticket';
+import BpkPanel from 'bpk-component-panel';
+import BpkButtonPrimary from 'bpk-component-button';
 
 import { getTicketFromMarket } from '../../../redux/selectors';
 
-// import STYLES from './Ticket.scss';
+import STYLES from './Ticket.scss';
 
 const renderAgents = agents => agents.map(item => <span>{item}</span>);
+
+const renderLeg = leg => (
+  <BpkPanel className={STYLES.Ticket__legContainer}>
+    <div className={STYLES.Ticket__departureArrivalContainer}>
+      <div>departure: {leg.departure}</div>
+      <div>arrival: {leg.arrival}</div>
+    </div>
+    <div className={STYLES.Ticket__durationStopsContainer}>
+      <div>duration: {leg.duration}</div>
+      <div>stops: {leg.stops}</div>
+    </div>
+  </BpkPanel>
+);
+
 const Ticket = props => {
   const { market, agents, price, url, outbound, inbound } = props.ticketData;
   return (
-    <div>
-      <p>market: {market}</p>
-      <p>agent(s): {renderAgents(agents)}</p>
-      <p>price: {price}€</p>
-      <a href={url}>Book</a>
-      <h4>Outbound</h4>
-      <p>departure: {outbound.departure}</p>
-      <p>arrival: {outbound.arrival}</p>
-      <p>duration: {outbound.duration}</p>
-      <p>stops: {outbound.stops}</p>
-      <h4>Inbound</h4>
-      {inbound ? (
-        <>
-          <p>departure: {inbound.departure}</p>
-          <p>arrival: {inbound.arrival}</p>
-          <p>duration: {inbound.duration}</p>
-          <p>stops: {inbound.stops}</p>
-        </>
-      ) : (
-        <p>N/A</p>
-      )}
-    </div>
+    <BpkTicket
+      className={STYLES.Ticket}
+      stub={
+        <div className={STYLES.Ticket__stub}>
+          <p className={STYLES.Ticket__price}>{price}€</p>
+          <BpkButtonPrimary
+            featured
+            href={url}
+            target="_blank"
+            className={STYLES.Ticket__bookButton}
+          >
+            Book
+          </BpkButtonPrimary>
+        </div>
+      }
+    >
+      <div className={STYLES.Ticket__marketAgentContainer}>
+        <div>market: {market}</div>
+        <div>agent(s): {renderAgents(agents)}</div>
+      </div>
+      {renderLeg(outbound)}
+      {inbound && renderLeg(inbound)}
+    </BpkTicket>
   );
 };
 
