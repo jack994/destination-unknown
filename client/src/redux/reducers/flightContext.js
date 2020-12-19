@@ -7,6 +7,7 @@ import {
   CHANGE_CHILDREN,
   CHANGE_INFANTS,
   CHANGE_TRIP_TYPE,
+  CHANGE_DIRECT_ONLY,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
   numberOfChildren: 0,
   numberOfInfants: 0,
   isReturn: false,
+  isDirectOnly: false,
 };
 
 export default (state = initialState, action) => {
@@ -73,6 +75,9 @@ export default (state = initialState, action) => {
     }
     case CHANGE_TRIP_TYPE: {
       return { ...state, isReturn: !state.isReturn };
+    }
+    case CHANGE_DIRECT_ONLY: {
+      return { ...state, isDirectOnly: !state.isDirectOnly };
     }
     default:
       return state;

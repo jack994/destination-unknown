@@ -1,14 +1,21 @@
 @import '~bpk-mixins';
 
 .SearchControls{
+  &__checkBoxPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: space-between;
+    margin: $bpk-spacing-xs;
+  }
   &__checkBox {
-    margin-right: 1rem;
+    margin: $bpk-spacing-xs;
   }
   &__bottomPanel {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 0.5rem;
+    margin: $bpk-spacing-xs;
   }
   &__searchPanel {
     display: flex;
@@ -26,6 +33,6 @@
   }
   &__searchButton {
     font-size: 1.5rem;
-    padding: 0.5rem 2rem;
+    padding: $bpk-spacing-sm $bpk-spacing-lg;
   }
 }

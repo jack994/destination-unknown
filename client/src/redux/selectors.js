@@ -10,6 +10,7 @@ export const getNumberOfChildrenState = store =>
 export const getNumberOfInfantsState = store =>
   store.flightContext.numberOfInfants;
 export const getIsReturnState = store => store.flightContext.isReturn;
+export const getIsDirectOnlyState = store => store.flightContext.isDirectOnly;
 
 // Skyscanner selectors
 export const getMarkets = store =>

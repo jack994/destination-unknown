@@ -17,6 +17,7 @@ import {
   changeChildren,
   changeInfants,
   changeTripType,
+  changeDirectOnly,
 } from '../../redux/actions/flightContextActions';
 import {
   getStartDateState,
@@ -24,16 +25,17 @@ import {
   getFromState,
   getToState,
   getIsReturnState,
+  getIsDirectOnlyState,
   getNumberOfPeopleState,
   getNumberOfChildrenState,
   getNumberOfInfantsState,
 } from '../../redux/selectors';
+import { formatDateSkyscannerApi } from '../Utils';
 
 import DatePicker from './DatePicker/DatePicker';
 import SearchBar from './SearchBar/SearchBar';
 import PassengerSelector from './PassengerSelector/PassengerSelector';
 import STYLES from './SearchControls.scss';
-import { formatDateSkyscannerApi } from './searchControlsUtils';
 
 const getNeighbouringCountries = async countryCode => {
   if (!countryCode) {
@@ -69,6 +71,11 @@ class SearchControls extends Component {
     changeTripType();
   }
 
+  toggleDirectOnly() {
+    const { changeDirectOnly } = this.props;
+    changeDirectOnly();
+  }
+
   async searchFlight() {
     const {
       startDate,
@@ -79,6 +86,7 @@ class SearchControls extends Component {
       infants,
       children,
       populateSkyscanner,
+      isDirectOnly,
     } = this.props;
 
     const originIATA = origin && origin.PlaceId;
@@ -105,6 +113,7 @@ class SearchControls extends Component {
           infants,
         },
         borders: uniqueBorders,
+        isDirectOnly,
       };
 
       try {
@@ -138,6 +147,7 @@ class SearchControls extends Component {
       infants,
       children,
       isReturn,
+      isDirectOnly,
       changeStartDate,
       changeEndDate,
       changeFrom,
@@ -169,13 +179,22 @@ class SearchControls extends Component {
         </div>
         <BpkPanel className={STYLES.SearchControls__bottomPanel}>
           <div className={STYLES.SearchControls__passengersPanel}>
-            <BpkCheckbox
-              className={STYLES.SearchControls__checkBox}
-              name="return-flight"
-              checked={isReturn}
-              onChange={e => this.toggleReturn(e)}
-              label="Return Flight"
-            />
+            <div className={STYLES.SearchControls__checkBoxPanel}>
+              <BpkCheckbox
+                className={STYLES.SearchControls__checkBox}
+                name="return-flight"
+                checked={isReturn}
+                onChange={e => this.toggleReturn(e)}
+                label="Return Flight"
+              />
+              <BpkCheckbox
+                className={STYLES.SearchControls__checkBox}
+                name="directs-only"
+                checked={isDirectOnly}
+                onChange={() => this.toggleDirectOnly()}
+                label="Directs Only"
+              />
+            </div>
             <PassengerSelector
               min={1}
               title="Adults (16+ years old)"
@@ -216,6 +235,7 @@ const mapStateToProps = state => {
     children: getNumberOfChildrenState(state),
     infants: getNumberOfInfantsState(state),
     isReturn: getIsReturnState(state),
+    isDirectOnly: getIsDirectOnlyState(state),
   };
 };
 
@@ -228,6 +248,7 @@ export default connect(mapStateToProps, {
   changeChildren,
   changeInfants,
   changeTripType,
+  changeDirectOnly,
   populateSkyscanner,
 })(SearchControls);
 
@@ -259,6 +280,7 @@ SearchControls.propTypes = {
   children: PropTypes.number.isRequired,
   infants: PropTypes.number.isRequired,
   isReturn: PropTypes.bool.isRequired,
+  isDirectOnly: PropTypes.bool.isRequired,
   changeStartDate: PropTypes.func.isRequired,
   changeEndDate: PropTypes.func.isRequired,
   changeFrom: PropTypes.func.isRequired,
@@ -267,6 +289,7 @@ SearchControls.propTypes = {
   changeChildren: PropTypes.func.isRequired,
   changeInfants: PropTypes.func.isRequired,
   changeTripType: PropTypes.func.isRequired,
+  changeDirectOnly: PropTypes.func.isRequired,
   populateSkyscanner: PropTypes.func.isRequired,
 };
 

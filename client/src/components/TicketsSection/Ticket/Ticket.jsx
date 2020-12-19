@@ -6,20 +6,25 @@ import BpkPanel from 'bpk-component-panel';
 import BpkButtonPrimary from 'bpk-component-button';
 
 import { getTicketFromMarket } from '../../../redux/selectors';
+import { formatDepartureArrivalFromString, convertTime } from '../../Utils';
 
 import STYLES from './Ticket.scss';
 
 const renderAgents = agents => agents.map(item => <span>{item}</span>);
 
-const renderLeg = leg => (
+const renderLeg = (leg, isReturnLeg) => (
   <BpkPanel className={STYLES.Ticket__legContainer}>
+    <span>
+      <b>{isReturnLeg ? 'Inbound' : 'Outbound'}</b>
+    </span>
     <div className={STYLES.Ticket__departureArrivalContainer}>
-      <div>departure: {leg.departure}</div>
-      <div>arrival: {leg.arrival}</div>
+      <span>
+        {formatDepartureArrivalFromString(leg.departure, leg.arrival)}
+      </span>
     </div>
     <div className={STYLES.Ticket__durationStopsContainer}>
-      <div>duration: {leg.duration}</div>
-      <div>stops: {leg.stops}</div>
+      <span>duration: {convertTime(leg.duration)}</span>
+      <span>{leg.stops === 0 ? 'Direct' : `stops: ${leg.stops}`}</span>
     </div>
   </BpkPanel>
 );
@@ -47,8 +52,8 @@ const Ticket = props => {
         <div>market: {market}</div>
         <div>agent(s): {renderAgents(agents)}</div>
       </div>
-      {renderLeg(outbound)}
-      {inbound && renderLeg(inbound)}
+      {renderLeg(outbound, false)}
+      {inbound && renderLeg(inbound, true)}
     </BpkTicket>
   );
 };

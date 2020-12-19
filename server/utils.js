@@ -1,7 +1,8 @@
 const fetch = require("node-fetch");
 
-async function pollSession(sessionUrl) {
+async function pollSession(sessionUrl, isDirectOnly) {
   let completed = false;
+  const stops = isDirectOnly ? '&stops=0' : '';
 
   while (!completed) {
     await new Promise((resolve) => {
@@ -20,7 +21,7 @@ async function pollSession(sessionUrl) {
   }
 
   // fetch all pages if finished polling
-  const finalResponse = await fetch(`${sessionUrl}`);
+  const finalResponse = await fetch(`${sessionUrl}${stops}`);
 
   if (!finalResponse.ok) {
     throw new Error(finalResponse.statusText);
@@ -31,7 +32,7 @@ async function pollSession(sessionUrl) {
   }
 }
 
-async function requestPerMarket(market, requestBody){
+async function requestPerMarket(market, requestBody, isDirectOnly){
   const bodyWithMarket = {
     ...requestBody,
     country: market,
@@ -60,7 +61,7 @@ async function requestPerMarket(market, requestBody){
   }
   if (session) {
     const sessionUrl = `${session}?apiKey=${requestBody.apiKey}`;
-    resp = await pollSession(sessionUrl);
+    resp = await pollSession(sessionUrl, isDirectOnly);
   }
   return {market, response: resp};
 }
