@@ -17,3 +17,4 @@ export const getMarkets = store =>
   store.skyscanner.tickets.map(ticket => ticket.market);
 export const getTicketFromMarket = (store, market) =>
   store.skyscanner.tickets.find(ticket => ticket.market === market);
+export const getIsLoading = store => store.skyscanner.isLoading;

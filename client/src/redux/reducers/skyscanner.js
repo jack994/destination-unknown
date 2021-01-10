@@ -1,7 +1,8 @@
-import { POPULATE_SKYSCANNER } from '../actions/actionTypes';
+import { POPULATE_SKYSCANNER, TOGGLE_LOADING } from '../actions/actionTypes';
 
 const initialState = {
   tickets: [],
+  isLoading: false,
 };
 
 const getCheapestPricingOption = pricingOptions => {
@@ -102,6 +103,13 @@ export default (state = initialState, action) => {
         ...state,
         // TODO: can we avoid updating the whole tickets state but only the part that changed?
         tickets,
+      };
+    }
+    case TOGGLE_LOADING: {
+      const { active } = action.payload;
+      return {
+        ...state,
+        isLoading: active,
       };
     }
     default:

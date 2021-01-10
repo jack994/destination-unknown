@@ -28,7 +28,8 @@
     @include container;
 
     @include bpk-breakpoint-tablet {
-      padding: $bpk-spacing-base $bpk-spacing-xs $bpk-spacing-base $bpk-spacing-xs;
+      padding: $bpk-spacing-base $bpk-spacing-xs $bpk-spacing-base
+        $bpk-spacing-xs;
     }
   }
 

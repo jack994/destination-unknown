@@ -8,7 +8,10 @@ import PropTypes from 'prop-types';
 import { convertIso3Code } from 'convert-country-codes';
 
 import { datesAreValid, formatDateSkyscannerApi } from '../Utils';
-import { populateSkyscanner } from '../../redux/actions/skyscannerActions';
+import {
+  populateSkyscanner,
+  toggleLoading,
+} from '../../redux/actions/skyscannerActions';
 import {
   changeStartDate,
   changeEndDate,
@@ -30,6 +33,7 @@ import {
   getNumberOfPeopleState,
   getNumberOfChildrenState,
   getNumberOfInfantsState,
+  getIsLoading,
 } from '../../redux/selectors';
 
 import DatePicker from './DatePicker/DatePicker';
@@ -87,6 +91,7 @@ class SearchControls extends Component {
       children,
       populateSkyscanner,
       isDirectOnly,
+      toggleLoading,
     } = this.props;
 
     if (!datesAreValid(startDate, endDate)) {
@@ -121,6 +126,7 @@ class SearchControls extends Component {
         isDirectOnly,
       };
 
+      toggleLoading(true);
       try {
         const response = await fetch('/api/search', {
           method: 'POST',
@@ -142,6 +148,7 @@ class SearchControls extends Component {
         console.log(err);
       }
     }
+    toggleLoading(false);
   }
 
   render() {
@@ -153,6 +160,7 @@ class SearchControls extends Component {
       children,
       isReturn,
       isDirectOnly,
+      isLoading,
       changeStartDate,
       changeEndDate,
       changeFrom,
@@ -221,6 +229,7 @@ class SearchControls extends Component {
           </div>
           <BpkButtonPrimary
             featured
+            disabled={isLoading}
             className={STYLES.SearchControls__searchButton}
             onClick={() => this.searchFlight()}
           >
@@ -243,6 +252,7 @@ const mapStateToProps = state => {
     infants: getNumberOfInfantsState(state),
     isReturn: getIsReturnState(state),
     isDirectOnly: getIsDirectOnlyState(state),
+    isLoading: getIsLoading(state),
   };
 };
 
@@ -257,6 +267,7 @@ export default connect(mapStateToProps, {
   changeTripType,
   changeDirectOnly,
   populateSkyscanner,
+  toggleLoading,
 })(SearchControls);
 
 const locationShape = PropTypes.shape({
@@ -288,6 +299,7 @@ SearchControls.propTypes = {
   infants: PropTypes.number.isRequired,
   isReturn: PropTypes.bool.isRequired,
   isDirectOnly: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   changeStartDate: PropTypes.func.isRequired,
   changeEndDate: PropTypes.func.isRequired,
   changeFrom: PropTypes.func.isRequired,
@@ -298,6 +310,7 @@ SearchControls.propTypes = {
   changeTripType: PropTypes.func.isRequired,
   changeDirectOnly: PropTypes.func.isRequired,
   populateSkyscanner: PropTypes.func.isRequired,
+  toggleLoading: PropTypes.func.isRequired,
 };
 
 SearchControls.defaultProps = {
