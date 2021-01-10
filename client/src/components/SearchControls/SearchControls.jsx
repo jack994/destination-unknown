@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { convertIso3Code } from 'convert-country-codes';
 
+import { datesAreValid, formatDateSkyscannerApi } from '../Utils';
 import { populateSkyscanner } from '../../redux/actions/skyscannerActions';
 import {
   changeStartDate,
@@ -30,7 +31,6 @@ import {
   getNumberOfChildrenState,
   getNumberOfInfantsState,
 } from '../../redux/selectors';
-import { formatDateSkyscannerApi } from '../Utils';
 
 import DatePicker from './DatePicker/DatePicker';
 import SearchBar from './SearchBar/SearchBar';
@@ -88,6 +88,11 @@ class SearchControls extends Component {
       populateSkyscanner,
       isDirectOnly,
     } = this.props;
+
+    if (!datesAreValid(startDate, endDate)) {
+      alert('Dates are invalid');
+      return;
+    }
 
     const originIATA = origin && origin.PlaceId;
     const originCountry = origin && origin.CountryId;
@@ -195,22 +200,24 @@ class SearchControls extends Component {
                 label="Directs Only"
               />
             </div>
-            <PassengerSelector
-              min={1}
-              title="Adults (16+ years old)"
-              total={adults}
-              changeTotal={changePassengers}
-            />
-            <PassengerSelector
-              title="Children (1-16 years old)"
-              total={children}
-              changeTotal={changeChildren}
-            />
-            <PassengerSelector
-              title="Infants (0-12 months old)"
-              total={infants}
-              changeTotal={changeInfants}
-            />
+            <div className={STYLES.SearchControls__nudgersPanel}>
+              <PassengerSelector
+                min={1}
+                title="Adults (16+ years old)"
+                total={adults}
+                changeTotal={changePassengers}
+              />
+              <PassengerSelector
+                title="Children (1-16 years old)"
+                total={children}
+                changeTotal={changeChildren}
+              />
+              <PassengerSelector
+                title="Infants (0-12 months old)"
+                total={infants}
+                changeTotal={changeInfants}
+              />
+            </div>
           </div>
           <BpkButtonPrimary
             featured

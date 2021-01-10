@@ -3,8 +3,17 @@
 .Ticket{
   margin: $bpk-spacing-sm 0 $bpk-spacing-sm 0;
 
+  @include bpk-breakpoint-mobile {
+    margin: $bpk-spacing-md 0 $bpk-spacing-md 0;
+  }
+
   &__stub{
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 100%;
   }
 
   &__marketAgentContainer{
@@ -34,6 +43,7 @@
   }
 
   &__price{
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    margin-top: 0;
   }
 }

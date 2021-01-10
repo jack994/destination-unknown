@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import BpkBreakpoint, { BREAKPOINTS } from 'bpk-component-breakpoint';
 
 import { getMarkets } from '../../redux/selectors';
 
@@ -9,7 +10,16 @@ import Ticket from './Ticket/Ticket';
 // import STYLES from './TicketsSection.scss';
 
 const createTicketList = markets =>
-  markets.map(item => <Ticket market={item} />);
+  markets.map(item => (
+    <>
+      <BpkBreakpoint query={BREAKPOINTS.MOBILE}>
+        <Ticket vertical market={item} />
+      </BpkBreakpoint>
+      <BpkBreakpoint query={BREAKPOINTS.ABOVE_MOBILE}>
+        <Ticket market={item} />
+      </BpkBreakpoint>
+    </>
+  ));
 
 const TicketsSection = props => {
   const { markets } = props;

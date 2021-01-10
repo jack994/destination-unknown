@@ -23,6 +23,7 @@
   "dependencies": {
     "backpack-react-scripts": "^8.0.0-beta.41a3a687f",
     "bpk-component-autosuggest": "^4.1.19",
+    "bpk-component-breakpoint": "^2.0.99",
     "bpk-component-button": "^3.3.1",
     "bpk-component-calendar": "^7.0.47",
     "bpk-component-checkbox": "^2.2.20",
@@ -47,9 +48,9 @@
   },
   "devDependencies": {
     "eslint-config-skyscanner": "^6.0.0",
+    "stylefmt": "^6.0.3",
     "stylelint": "^13.8.0",
     "stylelint-config-skyscanner": "^2.4.0",
-    "stylelint-scss": "^3.18.0",
-    "stylefmt": "^6.0.3"
+    "stylelint-scss": "^3.18.0"
   }
 }

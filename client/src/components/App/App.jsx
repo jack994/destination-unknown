@@ -12,8 +12,8 @@ const App = () => (
   <Provider store={store}>
     <header className={STYLES.App__header}>
       <div className={STYLES.App__headerInner}>
-        <BpkText tagName="h1" textStyle="xxl" className={STYLES.App__heading}>
-          Destination Unknown
+        <BpkText tagName="h1" className={STYLES.App__heading}>
+          Cheapest Flights by Market
         </BpkText>
       </div>
     </header>

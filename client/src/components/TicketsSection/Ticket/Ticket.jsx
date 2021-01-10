@@ -34,9 +34,10 @@ const Ticket = props => {
   return (
     <BpkTicket
       className={STYLES.Ticket}
+      vertical={props.vertical}
       stub={
         <div className={STYLES.Ticket__stub}>
-          <p className={STYLES.Ticket__price}>{price}€</p>
+          <p className={STYLES.Ticket__price}>{price.toFixed(2)}€</p>
           <BpkButtonPrimary
             featured
             href={url}
@@ -74,6 +75,7 @@ const leg = PropTypes.shape({
 });
 
 Ticket.propTypes = {
+  vertical: PropTypes.bool.isRequired,
   ticketData: PropTypes.shape({
     market: PropTypes.string.isRequired,
     agents: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -84,4 +86,4 @@ Ticket.propTypes = {
   }).isRequired,
 };
 
-// Ticket.defaultProps = {};
+// TODO: Ticket.defaultProps = {};
