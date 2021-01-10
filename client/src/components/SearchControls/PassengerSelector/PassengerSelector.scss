@@ -1,5 +1,7 @@
+@import '~bpk-mixins';
+
 .PassengerSelector{
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-left: $bpk-spacing-sm;
+  margin-right: $bpk-spacing-sm;
   text-align: center;
 }

@@ -7,6 +7,7 @@ import {
   CHANGE_CHILDREN,
   CHANGE_INFANTS,
   CHANGE_TRIP_TYPE,
+  CHANGE_DIRECT_ONLY,
 } from './actionTypes';
 
 export const changeFrom = place => ({
@@ -46,4 +47,8 @@ export const changeInfants = infants => ({
 
 export const changeTripType = () => ({
   type: CHANGE_TRIP_TYPE,
+});
+
+export const changeDirectOnly = () => ({
+  type: CHANGE_DIRECT_ONLY,
 });

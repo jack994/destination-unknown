@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { convertIso3Code } from 'convert-country-codes';
 
+import { datesAreValid, formatDateSkyscannerApi } from '../Utils';
+import { populateSkyscanner } from '../../redux/actions/skyscannerActions';
 import {
   changeStartDate,
   changeEndDate,
@@ -16,6 +18,7 @@ import {
   changeChildren,
   changeInfants,
   changeTripType,
+  changeDirectOnly,
 } from '../../redux/actions/flightContextActions';
 import {
   getStartDateState,
@@ -23,6 +26,7 @@ import {
   getFromState,
   getToState,
   getIsReturnState,
+  getIsDirectOnlyState,
   getNumberOfPeopleState,
   getNumberOfChildrenState,
   getNumberOfInfantsState,
@@ -32,7 +36,6 @@ import DatePicker from './DatePicker/DatePicker';
 import SearchBar from './SearchBar/SearchBar';
 import PassengerSelector from './PassengerSelector/PassengerSelector';
 import STYLES from './SearchControls.scss';
-import { formatDateSkyscannerApi } from './searchControlsUtils';
 
 const getNeighbouringCountries = async countryCode => {
   if (!countryCode) {
@@ -68,6 +71,11 @@ class SearchControls extends Component {
     changeTripType();
   }
 
+  toggleDirectOnly() {
+    const { changeDirectOnly } = this.props;
+    changeDirectOnly();
+  }
+
   async searchFlight() {
     const {
       startDate,
@@ -77,7 +85,14 @@ class SearchControls extends Component {
       adults,
       infants,
       children,
+      populateSkyscanner,
+      isDirectOnly,
     } = this.props;
+
+    if (!datesAreValid(startDate, endDate)) {
+      alert('Dates are invalid');
+      return;
+    }
 
     const originIATA = origin && origin.PlaceId;
     const originCountry = origin && origin.CountryId;
@@ -103,6 +118,7 @@ class SearchControls extends Component {
           infants,
         },
         borders: uniqueBorders,
+        isDirectOnly,
       };
 
       try {
@@ -120,8 +136,8 @@ class SearchControls extends Component {
           throw new Error(`${response.status}: ${retValue.message}`);
         }
 
-        // TODO: do something with response
-        console.log(retValue);
+        // this inserts response in the store
+        populateSkyscanner(retValue);
       } catch (err) {
         console.log(err);
       }
@@ -136,6 +152,7 @@ class SearchControls extends Component {
       infants,
       children,
       isReturn,
+      isDirectOnly,
       changeStartDate,
       changeEndDate,
       changeFrom,
@@ -167,29 +184,40 @@ class SearchControls extends Component {
         </div>
         <BpkPanel className={STYLES.SearchControls__bottomPanel}>
           <div className={STYLES.SearchControls__passengersPanel}>
-            <BpkCheckbox
-              className={STYLES.SearchControls__checkBox}
-              name="return-flight"
-              checked={isReturn}
-              onChange={e => this.toggleReturn(e)}
-              label="Return Flight"
-            />
-            <PassengerSelector
-              min={1}
-              title="Adults (16+ years old)"
-              total={adults}
-              changeTotal={changePassengers}
-            />
-            <PassengerSelector
-              title="Children (1-16 years old)"
-              total={children}
-              changeTotal={changeChildren}
-            />
-            <PassengerSelector
-              title="Infants (0-12 months old)"
-              total={infants}
-              changeTotal={changeInfants}
-            />
+            <div className={STYLES.SearchControls__checkBoxPanel}>
+              <BpkCheckbox
+                className={STYLES.SearchControls__checkBox}
+                name="return-flight"
+                checked={isReturn}
+                onChange={e => this.toggleReturn(e)}
+                label="Return Flight"
+              />
+              <BpkCheckbox
+                className={STYLES.SearchControls__checkBox}
+                name="directs-only"
+                checked={isDirectOnly}
+                onChange={() => this.toggleDirectOnly()}
+                label="Directs Only"
+              />
+            </div>
+            <div className={STYLES.SearchControls__nudgersPanel}>
+              <PassengerSelector
+                min={1}
+                title="Adults (16+ years old)"
+                total={adults}
+                changeTotal={changePassengers}
+              />
+              <PassengerSelector
+                title="Children (1-16 years old)"
+                total={children}
+                changeTotal={changeChildren}
+              />
+              <PassengerSelector
+                title="Infants (0-12 months old)"
+                total={infants}
+                changeTotal={changeInfants}
+              />
+            </div>
           </div>
           <BpkButtonPrimary
             featured
@@ -214,6 +242,7 @@ const mapStateToProps = state => {
     children: getNumberOfChildrenState(state),
     infants: getNumberOfInfantsState(state),
     isReturn: getIsReturnState(state),
+    isDirectOnly: getIsDirectOnlyState(state),
   };
 };
 
@@ -226,6 +255,8 @@ export default connect(mapStateToProps, {
   changeChildren,
   changeInfants,
   changeTripType,
+  changeDirectOnly,
+  populateSkyscanner,
 })(SearchControls);
 
 const locationShape = PropTypes.shape({
@@ -256,6 +287,7 @@ SearchControls.propTypes = {
   children: PropTypes.number.isRequired,
   infants: PropTypes.number.isRequired,
   isReturn: PropTypes.bool.isRequired,
+  isDirectOnly: PropTypes.bool.isRequired,
   changeStartDate: PropTypes.func.isRequired,
   changeEndDate: PropTypes.func.isRequired,
   changeFrom: PropTypes.func.isRequired,
@@ -264,6 +296,8 @@ SearchControls.propTypes = {
   changeChildren: PropTypes.func.isRequired,
   changeInfants: PropTypes.func.isRequired,
   changeTripType: PropTypes.func.isRequired,
+  changeDirectOnly: PropTypes.func.isRequired,
+  populateSkyscanner: PropTypes.func.isRequired,
 };
 
 SearchControls.defaultProps = {
