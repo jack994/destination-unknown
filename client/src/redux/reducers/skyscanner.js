@@ -100,7 +100,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        // TODO: can we not update the whole tickets state but only the part that changed?
+        // TODO: can we avoid updating the whole tickets state but only the part that changed?
         tickets,
       };
     }

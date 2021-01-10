@@ -85,5 +85,3 @@ Ticket.propTypes = {
     inbound: leg,
   }).isRequired,
 };
-
-// TODO: Ticket.defaultProps = {};
