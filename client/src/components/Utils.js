@@ -33,6 +33,9 @@ export const convertTime = totMins => {
 };
 
 export const datesAreValid = (outbound, inbound) => {
+  if (!outbound && !inbound) {
+    return false;
+  }
   const outboundTime = outbound.getTime();
   if (outbound && !inbound) {
     const currentDate = new Date();

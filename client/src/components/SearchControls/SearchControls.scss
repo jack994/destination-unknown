@@ -1,15 +1,16 @@
 @import '~bpk-mixins';
 
-.SearchControls{
+.SearchControls {
   &__mainPanel {
     background-color: $bpk-color-monteverde;
   }
   &__checkBoxPanel {
     display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: space-between;
     margin: $bpk-spacing-xs;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+
     @include bpk-breakpoint-tablet {
       flex-direction: row;
     }
@@ -19,29 +20,32 @@
   }
   &__bottomPanel {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin: $bpk-spacing-xs;
+    justify-content: space-between;
+    align-items: center;
+
     @include bpk-breakpoint-tablet {
       flex-direction: column;
     }
   }
   &__searchPanel {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+
     @include bpk-breakpoint-mobile {
       flex-direction: column;
     }
   }
   &__datePanel {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
   }
   &__passengersPanel {
     display: flex;
     align-items: center;
+
     @include bpk-breakpoint-tablet {
       flex-direction: column;
     }
@@ -49,16 +53,19 @@
   &__nudgersPanel {
     display: flex;
     align-items: center;
+
     @include bpk-breakpoint-tablet {
       margin-top: $bpk-spacing-sm;
     }
+
     @include bpk-breakpoint-mobile {
       flex-direction: column;
     }
   }
   &__searchButton {
-    font-size: 1.5rem;
     padding: $bpk-spacing-sm $bpk-spacing-lg;
+    font-size: $bpk-spacing-base;
+
     @include bpk-breakpoint-tablet {
       margin-top: $bpk-spacing-sm;
     }

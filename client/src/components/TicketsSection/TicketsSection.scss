@@ -1,0 +1,14 @@
+@import '~bpk-mixins';
+
+.TicketsSection {
+  display: flex;
+  margin-top: $bpk-spacing-md;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__spinner {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
