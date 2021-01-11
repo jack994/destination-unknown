@@ -90,12 +90,12 @@ class SearchBar extends Component {
 
   render() {
     const { suggestions } = this.state;
-    const { title } = this.props;
+    const { title, id } = this.props;
     const titleId = title.replace(/\s/g, '');
 
     const inputProps = {
-      id: 'dest-autosuggest',
-      name: 'dest-autosuggest',
+      id,
+      name: id,
       placeholder: 'Enter a destination',
       value: this.state.currentSuggestion || '',
       onChange: this.onChange,
@@ -119,6 +119,7 @@ class SearchBar extends Component {
 }
 
 SearchBar.propTypes = {
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   setPlace: PropTypes.func.isRequired,
 };

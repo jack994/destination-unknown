@@ -7,9 +7,10 @@
     "npm": "^6.10.3"
   },
   "scripts": {
-    "start": "cd server && npm run start",
+    "start": "node ./server/server.js",
     "start:server:debug": "cd server && npm run start:debug",
     "start:client": "cd client && npm run start",
+    "heroku-prebuild": "cd server && npm install",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "build:client": "cd client && npm run build",
     "test:client": "cd client && npm run test",

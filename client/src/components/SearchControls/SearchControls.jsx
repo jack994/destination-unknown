@@ -173,8 +173,8 @@ class SearchControls extends Component {
     return (
       <BpkPanel className={STYLES.SearchControls__mainPanel}>
         <div className={STYLES.SearchControls__searchPanel}>
-          <SearchBar title="Origin" setPlace={changeFrom} />
-          <SearchBar title="Destination" setPlace={changeTo} />
+          <SearchBar id="ori-box" title="Origin" setPlace={changeFrom} />
+          <SearchBar id="dest-box" title="Destination" setPlace={changeTo} />
         </div>
         <div className={STYLES.SearchControls__datePanel}>
           <DatePicker
