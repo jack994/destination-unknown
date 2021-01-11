@@ -6,7 +6,8 @@ To run the application, a Skyscanner API key is required. A temporary key can be
 
 To run the application follow these steps:
 
-- `npm i`
+- `cd destination-unknown`
+- `cd server && npm i && cd ../client && npm i && cd ..`
 - `npm run start:client` in one terminal tab/window
 - `npm run start:server` in another terminal tab/window
 - If it does not open automatically, navigate to [http://localhost:3000](http://localhost:3000)
