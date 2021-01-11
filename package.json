@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node ./server/server.js",
+    "start:server": "cd server && npm run start",
     "start:server:debug": "cd server && npm run start:debug",
     "start:client": "cd client && npm run start",
     "heroku-prebuild": "cd server && npm install",
