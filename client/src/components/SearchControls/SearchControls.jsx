@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { convertIso3Code } from 'convert-country-codes';
 
-import { datesAreValid, formatDateSkyscannerApi } from '../Utils';
+import { datesAreValid, formatDateSkyscannerApi } from '../DatesUtils';
 import {
   populateSkyscanner,
   toggleLoading,

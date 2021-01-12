@@ -4,13 +4,18 @@ import { connect } from 'react-redux';
 import BpkTicket from 'bpk-component-ticket';
 import BpkPanel from 'bpk-component-panel';
 import BpkButtonPrimary from 'bpk-component-button';
+import BpkBreakpoint, { BREAKPOINTS } from 'bpk-component-breakpoint';
 
 import { getTicketFromMarket } from '../../../redux/selectors';
-import { formatDepartureArrivalFromString, convertTime } from '../../Utils';
+import {
+  formatDepartureArrivalFromString,
+  convertTime,
+} from '../../DatesUtils';
 
 import STYLES from './Ticket.scss';
 
-const renderAgents = agents => agents.map(item => <span>{item}</span>);
+const renderAgents = agents =>
+  agents.map(item => <span key={item}>{item}</span>);
 
 const renderLeg = (leg, isReturnLeg) => (
   <BpkPanel className={STYLES.Ticket__legContainer}>
@@ -30,7 +35,7 @@ const renderLeg = (leg, isReturnLeg) => (
 );
 
 const Ticket = props => {
-  const { market, agents, price, url, outbound, inbound } = props.ticketData;
+  const { agents, price, url, outbound, inbound } = props.ticketData;
   return (
     <BpkTicket
       className={STYLES.Ticket}
@@ -50,7 +55,7 @@ const Ticket = props => {
       }
     >
       <div className={STYLES.Ticket__marketAgentContainer}>
-        <div>market: {market}</div>
+        <div>market: {props.market}</div>
         <div>agent(s): {renderAgents(agents)}</div>
       </div>
       {renderLeg(outbound, false)}
@@ -59,29 +64,47 @@ const Ticket = props => {
   );
 };
 
+const ticketBreakpointSpecific = props => (
+  <>
+    <BpkBreakpoint query={BREAKPOINTS.MOBILE}>
+      <Ticket vertical {...props} />
+    </BpkBreakpoint>
+    <BpkBreakpoint query={BREAKPOINTS.ABOVE_MOBILE}>
+      <Ticket {...props} />
+    </BpkBreakpoint>
+  </>
+);
+
 const mapStateToProps = (state, ownProps) => {
   return {
     ticketData: getTicketFromMarket(state, ownProps.market),
   };
 };
 
-export default connect(mapStateToProps /** { actions here } */)(Ticket);
+export default connect(mapStateToProps /** { actions here } */)(
+  ticketBreakpointSpecific,
+);
 
 const leg = PropTypes.shape({
-  departure: PropTypes.instanceOf(Date).isRequired,
-  arrival: PropTypes.instanceOf(Date).isRequired,
+  departure: PropTypes.string.isRequired,
+  arrival: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
   stops: PropTypes.number.isRequired,
 });
 
 Ticket.propTypes = {
-  vertical: PropTypes.bool.isRequired,
+  vertical: PropTypes.bool,
+  market: PropTypes.string.isRequired,
   ticketData: PropTypes.shape({
     market: PropTypes.string.isRequired,
     agents: PropTypes.arrayOf(PropTypes.string).isRequired,
-    price: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
     url: PropTypes.string.isRequired,
     outbound: leg.isRequired,
     inbound: leg,
   }).isRequired,
+};
+
+Ticket.defaultProps = {
+  vertical: false,
 };

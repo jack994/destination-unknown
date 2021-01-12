@@ -1,25 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import BpkBreakpoint, { BREAKPOINTS } from 'bpk-component-breakpoint';
 import { BpkExtraLargeSpinner, SPINNER_TYPES } from 'bpk-component-spinner';
 
-import { getMarkets, getIsLoading } from '../../redux/selectors';
+import { getMarketsSortedByPrice, getIsLoading } from '../../redux/selectors';
 
 import Ticket from './Ticket/Ticket';
 import STYLES from './TicketsSection.scss';
 
-const createTicketList = markets =>
-  markets.map(item => (
-    <>
-      <BpkBreakpoint query={BREAKPOINTS.MOBILE}>
-        <Ticket vertical market={item} />
-      </BpkBreakpoint>
-      <BpkBreakpoint query={BREAKPOINTS.ABOVE_MOBILE}>
-        <Ticket market={item} />
-      </BpkBreakpoint>
-    </>
-  ));
+const createTicketList = markets => {
+  return markets.map(item => <Ticket key={item} market={item} />);
+};
 
 const TicketsSection = props => {
   const { markets, isLoading } = props;
@@ -39,7 +30,7 @@ const TicketsSection = props => {
 
 const mapStateToProps = state => {
   return {
-    markets: getMarkets(state),
+    markets: getMarketsSortedByPrice(state),
     isLoading: getIsLoading(state),
   };
 };

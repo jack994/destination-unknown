@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BpkDatepicker from 'bpk-component-datepicker';
 import BpkLabel from 'bpk-component-label';
 
-import { formatDate, formatDateFull, formatMonth } from '../../Utils';
+import { formatDate, formatDateFull, formatMonth } from '../../DatesUtils';
 
 import STYLES from './DatePicker.scss';
 
