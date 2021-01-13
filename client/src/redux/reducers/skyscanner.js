@@ -1,3 +1,4 @@
+// TODO: this file needs testing and improvements
 import { POPULATE_SKYSCANNER, TOGGLE_LOADING } from '../actions/actionTypes';
 
 const initialState = {
@@ -6,20 +7,17 @@ const initialState = {
 };
 
 const getCheapestPricingOption = pricingOptions => {
-  return (
-    pricingOptions &&
-    pricingOptions.length > 0 &&
-    pricingOptions.reduce((minObj, currentObj) =>
+  if (pricingOptions && pricingOptions.length > 0) {
+    return pricingOptions.reduce((minObj, currentObj) =>
       currentObj.Price < minObj.Price ? currentObj : minObj,
-    )
-  );
+    );
+  }
+  return null;
 };
 
 const getCheapestItinerary = itineraries => {
-  return (
-    itineraries &&
-    itineraries.length > 0 &&
-    itineraries.reduce((minObj, currentObj) => {
+  if (itineraries && itineraries.length > 0) {
+    return itineraries.reduce((minObj, currentObj) => {
       const cheapestPOMin = getCheapestPricingOption(minObj.PricingOptions);
       const cheapestPOCur = getCheapestPricingOption(currentObj.PricingOptions);
       if (cheapestPOMin && cheapestPOCur) {
@@ -28,6 +26,7 @@ const getCheapestItinerary = itineraries => {
           ? { ...currentObj, CheapestPricingOption: cheapestPOCur }
           : { ...minObj, CheapestPricingOption: cheapestPOMin };
       }
+      // TODO: do we really need these two checks?
       if (cheapestPOMin) {
         return { ...minObj, CheapestPricingOption: cheapestPOMin };
       }
@@ -35,8 +34,9 @@ const getCheapestItinerary = itineraries => {
         return { ...currentObj, CheapestPricingOption: cheapestPOCur };
       }
       return null;
-    })
-  );
+    });
+  }
+  return null;
 };
 
 const getAgentNamesFromItinerary = (itinerary, agents) => {
@@ -67,8 +67,12 @@ const buildTicketFromElement = (element, cheapestItinerary) => ({
     cheapestItinerary,
     element.response.Agents,
   ),
-  price: cheapestItinerary.CheapestPricingOption.Price,
-  url: cheapestItinerary.CheapestPricingOption.DeeplinkUrl,
+  price: cheapestItinerary.CheapestPricingOption
+    ? cheapestItinerary.CheapestPricingOption.Price
+    : getCheapestPricingOption(cheapestItinerary.PricingOptions).Price,
+  url: cheapestItinerary.CheapestPricingOption
+    ? cheapestItinerary.CheapestPricingOption.DeeplinkUrl
+    : getCheapestPricingOption(cheapestItinerary.PricingOptions).DeeplinkUrl,
   outbound: getLegDetailsFromId(
     cheapestItinerary.OutboundLegId,
     element.response.Legs,
@@ -101,7 +105,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        // TODO: can we avoid updating the whole tickets state but only the part that changed?
+        // TODO: can we avoid updating the whole ticket but only the part that changed?
         tickets,
       };
     }
