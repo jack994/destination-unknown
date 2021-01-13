@@ -2,7 +2,7 @@
 import { POPULATE_SKYSCANNER, TOGGLE_LOADING } from '../actions/actionTypes';
 
 const initialState = {
-  tickets: [],
+  tickets: null,
   isLoading: false,
 };
 

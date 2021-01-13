@@ -14,6 +14,7 @@ export const getIsDirectOnlyState = store => store.flightContext.isDirectOnly;
 
 // Skyscanner selectors
 export const getMarketsSortedByPrice = store =>
+  store.skyscanner.tickets &&
   store.skyscanner.tickets
     .sort((a, b) => (a.price > b.price ? 1 : -1))
     .map(ticket => ticket.market);

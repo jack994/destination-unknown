@@ -7,6 +7,12 @@
   justify-content: center;
   align-items: center;
 
+  &__noFlightsPanel {
+    font-size: $bpk-spacing-md;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+  }
   &__spinner {
     margin: 0 auto;
     text-align: center;
